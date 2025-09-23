@@ -55,23 +55,27 @@ from torch.utils.data import TensorDataset, DataLoader
 import seaborn as sns
 import matplotlib.pyplot as plt
 from sklearn.datasets import load_iris
-
+```
+```python
 # Load Iris dataset
 iris = load_iris()
 print(iris)
 X = iris.data  # Features
 y = iris.target  # Labels (already numerical)
-
+```
+```python
 # Convert to DataFrame for easy inspection
 df = pd.DataFrame(X, columns=iris.feature_names)
 print(df)
 df['target'] = y
 print(df)
-
+```
+```python
 # Display first and last 5 rows
 print("First 5 rows of dataset:\n", df.head())
 print("\nLast 5 rows of dataset:\n", df.tail())
-
+```
+```python
 # Split dataset
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
@@ -79,7 +83,8 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 scaler = StandardScaler()
 X_train = scaler.fit_transform(X_train)
 X_test = scaler.transform(X_test)
-
+```
+```python
 # Convert to PyTorch tensors
 X_train = torch.tensor(X_train, dtype=torch.float32)
 X_test = torch.tensor(X_test, dtype=torch.float32)
@@ -91,7 +96,8 @@ train_dataset = TensorDataset(X_train, y_train)
 test_dataset = TensorDataset(X_test, y_test)
 train_loader = DataLoader(train_dataset, batch_size=16, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=16)
-
+```
+```python
 # Define Neural Network Model
 class IrisClassifier(nn.Module):
     def __init__(self, input_size):
@@ -104,7 +110,8 @@ class IrisClassifier(nn.Module):
         x=F.relu(self.fc1(x))
         x=F.relu(self.fc2(x))
         return self.fc3(x)
-
+```
+```python
 # Training function
 def train_model(model, train_loader, criterion, optimizer, epochs):
      for epoch in range(epochs):
@@ -118,15 +125,18 @@ def train_model(model, train_loader, criterion, optimizer, epochs):
 
         if (epoch + 1) % 10 == 0:
             print(f'Epoch [{epoch + 1}/{epochs}], Loss: {loss.item():.4f}')
-
+```
+```python
 # Initialize model, loss function, and optimizer
 model = IrisClassifier(input_size=X_train.shape[1])
 criterion =nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=0.001)
-
+```
+```python
 # Train the model
 train_model(model, train_loader, criterion, optimizer, epochs=100)
-
+```
+```python
 # Evaluate the model
 model.eval()
 predictions, actuals = [], []
@@ -136,19 +146,22 @@ with torch.no_grad():
         _, predicted = torch.max(outputs, 1)
         predictions.extend(predicted.numpy())
         actuals.extend(y_batch.numpy())
-
+```
+```python
 # Compute metrics
 accuracy = accuracy_score(actuals, predictions)
 conf_matrix = confusion_matrix(actuals, predictions)
 class_report = classification_report(actuals, predictions, target_names=iris.target_names)
-
+```
+```python
 # Print details
 print("\nName: vignesh R")
 print("Register No: 212223240177")
 print(f'Test Accuracy: {accuracy:.2f}%')
 print("Confusion Matrix:\n", conf_matrix)
 print("Classification Report:\n", class_report)
-
+```
+```python
 # Plot confusion matrix
 plt.figure(figsize=(6, 5))
 sns.heatmap(conf_matrix, annot=True, cmap='Blues', xticklabels=iris.target_names, yticklabels=iris.target_names, fmt='g')
@@ -157,6 +170,8 @@ plt.ylabel("True Labels")
 plt.title("Confusion Matrix")
 plt.show()
 
+```
+```python
 # Make a sample prediction
 sample_input = X_test[5].unsqueeze(0)  # Removed unnecessary .clone()
 with torch.no_grad():
@@ -170,25 +185,22 @@ print(f'Predicted class for sample input: {predicted_class_label}')
 print(f'Actual class for sample input: {iris.target_names[y_test[5].item()]}')
 ```
 
-### Dataset Information
-<img width="701" height="610" alt="image" src="https://github.com/user-attachments/assets/4c402c5a-6a84-4449-9b1e-bcc6c7024f41" />
-
 
 ### OUTPUT
 
 ## Confusion Matrix
-<img width="610" height="495" alt="image" src="https://github.com/user-attachments/assets/10bea833-6d1c-4b74-b6fd-ab3bf36a680e" />
+<img width="289" height="142" alt="image" src="https://github.com/user-attachments/assets/b7a435fe-061c-46a4-9e0b-f37c827fb871" />
+
+<img width="647" height="554" alt="image" src="https://github.com/user-attachments/assets/9bdd645d-ca39-450a-b156-7376cfd8a6f3" />
 
 
 ## Classification Report
-<img width="529" height="203" alt="image" src="https://github.com/user-attachments/assets/76a3b9fb-6a5c-4ff2-b36c-c01dd8cd49cc" />
-
+<img width="557" height="212" alt="image" src="https://github.com/user-attachments/assets/5a12e90b-4831-47d8-b38a-7e4bb061063a" />
 
 
 ### New Sample Data Prediction
-<img width="444" height="97" alt="image" src="https://github.com/user-attachments/assets/609085ba-fb7e-465c-bc57-bedf3e5d12bf" />
 
-
+<img width="423" height="98" alt="image" src="https://github.com/user-attachments/assets/82b09893-ba4f-4511-ba28-4bd1f006c71c" />
 
 ## RESULT
 Thus, a neural network classification model was successfully developed and trained using PyTorch.
